@@ -9,12 +9,12 @@ img = Image.open('cat.jpg')
 box = (300, 300, 700, 700)
 region = img.crop(box)
 
+# 이미지를 90도 회전
+region = region.transpose(Image.ROTATE_90)
+
 # 이미지 크기 크게 변경
 new_size = (800, 800)
 img = img.resize(new_size)
-
-# 이미지를 90도 회전
-region = region.transpose(Image.ROTATE_90)
 
 # 이미지 좌우 대칭
 region = region.transpose(Image.FLIP_LEFT_RIGHT)
