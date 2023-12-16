@@ -1,0 +1,31 @@
+import os
+import re
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+def read_file(file_path):
+    with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
+        return file.read()
+
+def search_files(directory='.', query=''):
+    documents = []
+    file_paths = []
+
+    for dirpath, dirnames, files in os.walk(directory):
+        for name in files:
+            full_path = os.path.join(dirpath, name)
+            file_content = read_file(full_path)
+            documents.append(file_content)
+            file_paths.append(full_path)
+
+    vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_matrix = vectorizer.fit_transform(documents)
+    query_vec = vectorizer.transform([query])
+
+    cosine_similarities = cosine_similarity(query_vec, tfidf_matrix).flatten()
+    related_docs_indices = cosine_similarities.argsort()[:-5:-1]
+
+    for index in related_docs_indices:
+        print(f"Found in: {file_paths[index]}")
+
+search_files(directory='C:\\Users\\YourUsername', query='검색어')
